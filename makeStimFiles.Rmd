@@ -26,11 +26,14 @@ memlist <- memlist[2:nrow(memlist),]
 memlist <- memlist[!is.na(memlist$Event.number),]
 
 # remove memories with valence > 2 SDs from subject's mean valence
-valence_mean = mean(as.numeric(memlist$Valence))
-valence_sd = sd(as.numeric(memlist$Valence))
-threshold = valence_mean + valence_sd*2
-memlist_rate <- subset(memlist, as.numeric(memlist$Valence) < threshold)
-write.csv(memlist_rate, file = paste0('s',subID,'/conCFT_memlist_rate_s', subID,'.csv'), row.names = FALSE)
+#valence_mean = mean(as.numeric(memlist$Valence))
+#valence_sd = sd(as.numeric(memlist$Valence))
+#threshold = valence_mean + valence_sd*(qnorm(0.95))
+#memlist_rate <- subset(memlist, as.numeric(memlist$Valence) < threshold)
+#write.csv(memlist_rate, file = paste0('s',subID,'/conCFT_memlist_rate_s', subID,'.csv'), row.names = FALSE)
+memlist$mutability <- 8 - mean(memlist$MK, memlist$KO)
+memlist <- memlist[order(memlist$Valence, memlist$mutability),]
+memlist <- memlist[1:67,]
 
 # load & tidy rated file
 memlist_final <- read.csv(paste0('s',subID,'/conCFT_memlist_rate_s', subID,'.csv'))
