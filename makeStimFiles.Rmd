@@ -1,0 +1,59 @@
+---
+title: "Generate conCFT stim list"
+author: "Maria Khoudary"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(dplyr)
+library(ltm)
+
+# load in & tidy Session 1 file 
+subID = '01'
+memlist <- read.csv(paste0('C:/Users/imclab/Box Sync/duke_de_brigard_lab/conCFT/','s',subID,'/conCFT_Session 1_s', subID,'.csv'))[,1:8]
+memlist <- memlist[2:nrow(memlist),]
+memlist <- memlist[!is.na(memlist$Event.number),]
+
+# remove memories with valence > 2 SDs from subject's mean valence
+valence_mean = mean(as.numeric(memlist$Valence))
+valence_sd = sd(as.numeric(memlist$Valence))
+threshold = valence_mean + valence_sd*2
+memlist_rate <- subset(memlist, as.numeric(memlist$Valence) < threshold)
+write.csv(memlist_rate, file = paste0('s',subID,'/conCFT_memlist_rate_s', subID,'.csv'), row.names = FALSE)
+
+# load & tidy rated file
+memlist_final <- read.csv(paste0('s',subID,'/conCFT_memlist_rate_s', subID,'.csv'))
+memlist_final[,9:12] <- sapply(memlist_final[,9:12], function(n) as.numeric(n))
+
+# assess inter-rater reliability
+closeness_alpha = cronbach.alpha(memlist_final[,9:10])[['alpha']]
+mutability_alpha = cronbach.alpha(memlist_final[,11:12])[['alpha']]
+
+# randomize memory order
+set.seed(45)
+randrows <- sample(nrow(memlist_final))
+memlist_final <- memlist_final[randrows, ]
+
+# generate pseudorandom condition column
+randomConditions <- function (length=8, repetitions=3) {
+  conditions <- rep(c(1,2), each=length)
+  while (max(rle(conditions)$lengths) > repetitions)
+    conditions <- sample(conditions)
+  return(conditions)
+}
+
+condList <- c(randomConditions(), randomConditions(), 
+              randomConditions(), randomConditions())
+
+```
