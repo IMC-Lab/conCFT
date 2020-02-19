@@ -222,7 +222,7 @@ try
 if practice == 0
     runLength = 16;
 elseif practice == 1
-    runLength = 1;
+    runLength = 3;
 end
 
 %% start trials %%
