@@ -1,18 +1,23 @@
 function restingState_scan
 
-% setup the path
-addpath('P:\MATLAB\PsychToolbox\3.0.11');
-BIACSetupPsychtoolbox;
-AssertOpenGL;
-
 practice = input('Practice?: ');
+
+    if practice == 0
+        addpath('P:\MATLAB\PsychToolbox\3.0.11');
+        BIACSetupPsychtoolbox;
+        AssertOpenGL;
+    elseif practice == 1
+        AssertOpenGL;
+    end
+   
 
 % find pulse counter
 if practice == 0
-try
-   daq = DaqDeviceIndex();
- catch
-   error('Daq device not found');
+    try
+        daq = DaqDeviceIndex();
+    catch
+        error('Daq device not found');
+    end
 end
 
 
@@ -23,8 +28,13 @@ elseif practice == 1
 end
 
 %% start resting state scan w/ TTL pulse %%
-   DrawFormattedText(w, 'Setting up resting state scan...', 'center', 'center', WhiteIndex(w));
-   Screen('Flip', w);
+screens = Screen('Screens');
+screenNumber = max(screens);
+HideCursor;
+[w, ~] = Screen('OpenWindow', screenNumber, 0);
+
+DrawFormattedText(w, 'Setting up resting state scan...', 'center', 'center', WhiteIndex(w));
+Screen('Flip', w);
    
    while 1
    [keyIsDown, ~, ~] = KbCheck;
