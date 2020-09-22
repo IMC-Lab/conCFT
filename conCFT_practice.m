@@ -23,7 +23,6 @@ AssertOpenGL;
 KbName('UnifyKeyNames');
 
 % Use this mapping for testing
-image = KbName('1!'); %the key they press when they start imagining the CFT
 rate1 = KbName('1!'); 
 rate2 = KbName('2@');
 rate3 = KbName('3#');
@@ -33,8 +32,8 @@ rate4 = KbName('4$');
 %% file handling %%
 
 % Define filenames of output and input files. 
-dataFileName = [sID, '/conCFT_','Session2_practice', '.csv']; 
-stimulusFileName = [sID, '/conCFT_memlist_final_', sID, '.csv'];
+dataFileName = ['../Stimuli/', sID, '/conCFT_','Session2_practice', '.csv']; 
+stimulusFileName = ['../Stimuli/', sID, '/conCFT_memlist_final_', sID, '.csv'];
 
 % Read in the stimuli. 
 stimulusFile = readtable(stimulusFileName);
@@ -80,9 +79,9 @@ try
     Priority(MaxPriority(w));
     
     % Define variable lengths for experiment
-    durationMem = 1.000;
-    durationCFT = 1.000;
-    durationRate = 1.000;
+    durationMem = 6.000;
+    durationCFT = 8.000;
+    durationRate = 4.000;
     
     % Jitter2 is the length of the active jitter task 
     jitter1 = Shuffle(repelem([0.750, 1.500], 16)); % 16 = number of trials per run
@@ -113,10 +112,6 @@ try
             end
     end
 
-%% Collect resting state data %%
-
-
-
 %% Initialize task %%
 
     BeginEx = GetSecs; % get the time at which we move on from resting state acquisition
@@ -125,7 +120,7 @@ try
     message = 'Relax';
     DrawFormattedText(w, message, 'center', 'center', WhiteIndex(w));
     Screen('Flip', w);
-    WaitSecs(1.000);
+    WaitSecs(8.000);
     
     % Get fixation screen ready to go
     message = '+';
@@ -137,9 +132,9 @@ try
     % What is gonna get saved to the output file? 
     %(... means that code continues onto the next line -- helps with readability)
     fprintf(datafilepointer, ...
-        '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s', ...
+        '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s', ...
         'sub', 'trial', 'condition',...
-        'fixOnsetTime', 'jitter1', 'jitter2', 'jitter3', 'fixAccuracy',... 
+        'fixOnsetTime', 'jitter1', 'jitter2', 'jitter3', 'jitterStim1', 'jitterStim2', 'jitterStim3', 'jitterResp', 'jitterAccuracy',... 
         'memOnsetTime', 'eventNum', 'eventTitle', 'memRTtime', 'memRT',... 
         'cftOnsetTime', 'endCFT',...
         'ratingsOrder', ...
@@ -164,7 +159,10 @@ for trial = 1:3
         WaitSecs(jitter1(trial));
         
         % odd even task for the rest of the fixation
-        fixAccuracy = orientationFix(jitter2(trial), w, 1); 
+        [jitterStim, jitterResp, jitterAccuracy] = orientationFix(jitter2(trial), w); 
+        if size(jitterStim, 2) == 2
+            jitterStim{end+1} = NaN;
+        end 
         
         %fixation after odd/even task
         Screen('TextSize', w, 40);
@@ -182,8 +180,8 @@ for trial = 1:3
             
         % Keep the cue up for 'durationMem' length of time
         while (GetSecs - time2) <= durationMem
-            [~, memPress, keyCode] = KbCheck;
-            if keyCode(image)
+            [keyIsDown, memPress, ~] = KbCheck;
+            if keyIsDown == 1
                 memRT = memPress - time2;
             end
         end
@@ -304,9 +302,9 @@ for trial = 1:3
         trialEnd = time6 - BeginEx;
         
         % Write trial result to file:
-        fprintf(datafilepointer, '\n%i,%i,%s,%f,%f,%f,%f,%f,%f,%s,%s,%f,%f,%f,%f,%s,%f,%s,%f,%f,%s,%f,%f,%s,%f,%f', ...
+        fprintf(datafilepointer, '\n%i,%i,%s,%f,%f,%f,%f,%s,%s,%s,%s,%f,%f,%i,%s,%f,%f,%f,%f,%s,%f,%s,%f,%f,%s,%f,%f,%s,%f,%f', ...
                 subID, trial, condition,...
-                fixOnsetTime, jitter1(trial), jitter2(trial), jitter3(trial), fixAccuracy, ...
+                fixOnsetTime, jitter1(trial), jitter2(trial), jitter3(trial), jitterStim{1}, jitterStim{2}, jitterStim{3}, mat2str(jitterResp), jitterAccuracy, ...
                 memOnsetTime, eventNum(trial), cue, memRTtime, memRT,...
                 cftOnsetTime, endCFT, ...
                 mat2str(ratingsOrder), ...

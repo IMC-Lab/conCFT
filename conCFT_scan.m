@@ -71,7 +71,7 @@ conditionText = {'Self', 'Context'};
 
 %% file handling %%
 sID = ['s', num2str(subID)];
-folderName = [sID, '/results'];
+folderName = ['../Data/Behav/', sID];
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
@@ -81,7 +81,7 @@ dataFileName = [folderName, '/conCFT_', sID, '_run', num2str(run), '.csv'];
 
 % IMPORTANT!
 % This script assumes that stimuli & their condition assignment are already (pesudo)randomized in the input file
-stimulusFileName = [sID, '/conCFT_memlist_final_', sID, '.csv']; % stim list
+stimulusFileName = ['../Stimuli/', sID, '/conCFT_memlist_final_', sID, '.csv']; % stim list
 
 % Read in the stimuli. 
 % The text file contains the titles of each of the 64/80 memories provided by the participant during session 1 that we'll use as memory cues
@@ -140,9 +140,9 @@ try
         durationCFT = 8.000;
         durationRate = 4.000;
     elseif practice == 1
-        durationMem = 2.000;
-        durationCFT = 2.000;
-        durationRate = 2.000;
+        durationMem = 6.000;
+        durationCFT = 8.000;
+        durationRate = 4.000;
     end
     
     % Jitter2 is the length of the active jitter task 
@@ -241,7 +241,7 @@ end
         WaitSecs(jitter1(trial));
         
         % odd even task for the rest of the fixation
-        [jitterStim, jitterResp, jitterAccuracy] = orientationFix(jitter2(trial), w, practice); 
+        [jitterStim, jitterResp, jitterAccuracy] = orientationFix(jitter2(trial), w); 
         if size(jitterStim, 2) == 2
             jitterStim{end+1} = NaN;
         end

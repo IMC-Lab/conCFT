@@ -1,4 +1,4 @@
-function [imageList, fixResp, acc] = orientationFix(time, w, practice)
+function [imageList, fixResp, acc] = orientationFix(time, w)
 % run in Psychtoolbox, assumes a functioning screen/window.
 
 % duration in seconds
@@ -7,13 +7,8 @@ duration = 1.5;
 imageList = {};
 fixResp = [];
 
-if practice
-    rateLeft = KbName('z');
-    rateRight = KbName('m');
-else
-    rateLeft = KbName('1!');
-    rateRight = KbName('2@');
-end
+rateLeft = KbName('1!');
+rateRight = KbName('2@');
 
 % figure out how many different arrows we need to have one up for every 1.5 seconds of the active jitter
 reps = time/duration;
@@ -39,16 +34,8 @@ for image = 1:reps
             if iscell(resp)
                 resp = resp{1};
             end
-            if ~practice
-                % take out the first item from the response name
-                resp = str2double(resp(1)); 
-            else
-                if strcmp(resp, 'z')
-                    resp = 1;
-                elseif strcmp(resp, 'm')
-                    resp = 2;
-                end
-            end 
+            % get the numeric value of the response
+            resp = str2double(resp(1));  
         end
     end
     

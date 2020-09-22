@@ -22,7 +22,7 @@ end
 
 
 if practice == 0
-    minutes = 7;
+    minutes = 5;
 elseif practice == 1
     minutes = 1;
 end
