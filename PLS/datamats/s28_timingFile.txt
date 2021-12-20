@@ -1,0 +1,38 @@
+%%% General section start%%%
+prefix	conCFT_s28_CFT_only
+brain_region	0.15
+win_size	5
+across_run	1
+single_subj	0
+
+%%% General section end %%%
+%------------------------%
+%%% Condition section start %%%
+
+cond_name	Self
+ref_scan_onset	0
+num_ref_scan	1
+
+cond_name	Context
+ref_scan_onset	0
+num_ref_scan	1
+
+%%% Condition section end %%%
+%------------------------%
+%%% Run section start %%%
+
+data_files	../conCFT_funcData/sub-28/sub-28_ses-day2_task-conCFT_run-1_space-MNI152NLin6Asym_desc-smoothAROMAnonaggr_bold_tempfilt_brain.nii
+event_onsets	23	57	74	141	157	191	225	241	% selfCFT onsets	
+event_onsets	7	41	91	108	125	174	207	259	% contextCFT onsets	
+
+data_files	../conCFT_funcData/sub-28/sub-28_ses-day2_task-conCFT_run-2_space-MNI152NLin6Asym_desc-smoothAROMAnonaggr_bold_tempfilt_brain.nii
+event_onsets	7	23	58	123	140	173	190	240	% selfCFT onsets	
+event_onsets	41	74	90	106	156	207	223	256	% contextCFT onsets	
+
+data_files	../conCFT_funcData/sub-28/sub-28_ses-day2_task-conCFT_run-3_space-MNI152NLin6Asym_desc-smoothAROMAnonaggr_bold_tempfilt_brain.nii
+event_onsets	6	56	89	141	158	226	243	260	% selfCFT onsets	
+event_onsets	22	39	72	106	123	174	191	208	% contextCFT onsets	
+
+data_files	../conCFT_funcData/sub-28/sub-28_ses-day2_task-conCFT_run-4_space-MNI152NLin6Asym_desc-smoothAROMAnonaggr_bold_tempfilt_brain.nii
+event_onsets	23	57	74	126	143	178	227	244	% selfCFT onsets	
+event_onsets	5	40	92	109	160	194	211	260	% contextCFT onsets	
