@@ -4,7 +4,7 @@ library(paletti)
 library(patchwork)
 
 ## plotting colors
-custom_colors <- c('#00a6ff', '#ffa200')   
+custom_colors <- c('#ffa200', '#00a6ff')   
 custom_color <- get_scale_color(get_pal(custom_colors))
 custom_fill <- get_scale_fill(get_pal(custom_colors))
 
@@ -12,25 +12,25 @@ custom_fill <- get_scale_fill(get_pal(custom_colors))
 BSR <- read.csv('results/correctedMeanCentered_means.csv', F) %>% 
   rename(LV1=V1,LV2=V2) %>% 
   as.data.frame() %>%
-  mutate(condition=c('Dispositional', 'Situational')) 
+  mutate(condition=c('Internal', 'External')) 
 ## load in upper CIs
 BSR_upper <- read.csv('results/correctedMeanCentered_upperAdj.csv', F) %>% 
   rename(LV1_upper=V1,LV2_upper=V2) %>% 
   as.data.frame() %>%
-  mutate(condition=c('Dispositional', 'Situational'))
+  mutate(condition=c('Internal', 'External'))
 ## load in lower CIs
 BSR_lower <- read.csv('results/correctedMeanCentered_lowerAdj.csv', F) %>% 
   rename(LV1_lower=V1,LV2_lower=V2) %>% 
   as.data.frame() %>% 
-  mutate(condition=c('Dispositional', 'Situational'))
+  mutate(condition=c('Internal', 'External'))
 ## make one dataframe for brain scores
 BSR_LV1 <- BSR %>% dplyr::select(-LV2) 
 BSR_LV1$upper <- BSR_upper$LV1_upper
 BSR_LV1$lower <- BSR_lower$LV1_lower
 ## load in temporal brain scores
-BSR_tbs <- read.csv('corrected/MeanCentered_tbs.csv', F) %>%
+BSR_tbs <- read.csv('results/correctedMeanCentered_tbs.csv', F) %>%
   rename(Lag0=V1, Lag1=V2, Lag2=V3, Lag3=V4, Lag4=V5) %>%
-  mutate(condition=c('Dispositional', 'Situational')) %>%
+  mutate(condition=c('Internal', 'External')) %>%
   pivot_longer(cols=c(Lag0:Lag4), names_to = 'Lag', values_to = 'brain_score')
 
 ## plot mean-centered brain scores
